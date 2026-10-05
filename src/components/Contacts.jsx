@@ -3,9 +3,24 @@ import { Icon } from "../icons";
 import "./Contacts.css";
 
 const CONTACTS = [
-  { icon: "phone", label: "Телефон", value: "+7 (800) 123-45-67", href: "tel:+78001234567" },
-  { icon: "mail", label: "Электронная почта", value: "info@ekoteplo.ru", href: "mailto:info@ekoteplo.ru" },
-  { icon: "map-pin", label: "Адрес", value: "г. Краснодар, ул. Промышленная, д. 14, офис 3", href: null },
+  {
+    icon: "phone",
+    label: "Телефон",
+    value: "+7 (800) 123-45-67",
+    href: "tel:+78001234567",
+  },
+  {
+    icon: "mail",
+    label: "Электронная почта",
+    value: "info@ekoteplo.ru",
+    href: "mailto:info@ekoteplo.ru",
+  },
+  {
+    icon: "map-pin",
+    label: "Адрес",
+    value: "г. Саратов, ул. Первомайская, д. 26",
+    href: null,
+  },
 ];
 
 export default function Contacts() {
@@ -39,7 +54,9 @@ export default function Contacts() {
                   <div>
                     <div className="contact-label">{label}</div>
                     {href ? (
-                      <a className="contact-value" href={href}>{value}</a>
+                      <a className="contact-value" href={href}>
+                        {value}
+                      </a>
                     ) : (
                       <span className="contact-value">{value}</span>
                     )}
@@ -51,7 +68,7 @@ export default function Contacts() {
             <div className="map-placeholder">
               <div className="map-placeholder-inner">
                 <Icon name="map-pin" size={40} />
-                <p>Краснодар, ул. Промышленная, 14</p>
+                <p>Саратов, ул. Первомайская, 26</p>
               </div>
             </div>
           </div>
@@ -66,7 +83,9 @@ export default function Contacts() {
               <div className="form-success">
                 <Icon name="check" size={56} className="form-success-icon" />
                 <h4 className="form-success-title">Заявка отправлена!</h4>
-                <p className="form-success-text">Мы свяжемся с вами в ближайшее время.</p>
+                <p className="form-success-text">
+                  Мы свяжемся с вами в ближайшее время.
+                </p>
               </div>
             ) : (
               <form onSubmit={handleSubmit}>
@@ -89,7 +108,9 @@ export default function Contacts() {
                     required
                     placeholder="+7 (___) ___-__-__"
                     value={form.phone}
-                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, phone: e.target.value })
+                    }
                   />
                 </div>
                 <div className="form-field">
@@ -99,7 +120,9 @@ export default function Contacts() {
                     rows={4}
                     placeholder="Опишите ваш объект и задачу..."
                     value={form.message}
-                    onChange={(e) => setForm({ ...form, message: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, message: e.target.value })
+                    }
                   />
                 </div>
                 <button type="submit" className="form-submit">

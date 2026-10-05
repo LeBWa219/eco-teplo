@@ -53,7 +53,7 @@ export default function Footer() {
                   size={16}
                   className="footer-contact-icon"
                 />
-                г. Краснодар, ул. Промышленная, д. 14
+                г. Саратов, ул. Первомайская, д. 26
               </div>
             </div>
 
