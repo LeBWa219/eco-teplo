@@ -12,7 +12,7 @@ export default function Footer() {
               <span className="footer-logo-badge">
                 <Icon name="flame" size={20} />
               </span>
-              <span className="footer-logo-text">БиоГорелка</span>
+              <span className="footer-logo-text">ЭкоТепло</span>
             </button>
             <p className="footer-desc">
               Производитель горелок и котлов на альтернативно-возобновляемом
@@ -68,7 +68,7 @@ export default function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <p className="footer-copy">© 2026 БиоГорелка. Все права защищены.</p>
+          <p className="footer-copy">© 2025 ЭкоТепло. Все права защищены.</p>
           <p className="footer-tagline">
             Отопление на биотопливе · Горелки · Котлы ·
             Альтернативно-возобновляемая энергия

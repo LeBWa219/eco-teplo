@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Icon } from "../icons";
+import { sendToTelegram } from "../telegram";
 import "./Contacts.css";
 
 const CONTACTS = [
@@ -23,15 +24,58 @@ const CONTACTS = [
   },
 ];
 
+const COOLDOWN_MS = 60 * 1000; // 60 секунд между заявками — защита от спама
+
 export default function Contacts() {
   const [form, setForm] = useState({ name: "", phone: "", message: "" });
+  const [honeypot, setHoneypot] = useState(""); // ловушка для ботов (люди это поле не видят)
   const [sent, setSent] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [error, setError] = useState(null);
+  const [lastSubmit, setLastSubmit] = useState(0);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSent(true);
-    setForm({ name: "", phone: "", message: "" });
-    setTimeout(() => setSent(false), 5000);
+    if (isSending) return;
+
+    // Honeypot: если поле заполнено — это бот, молча имитируем успех
+    if (honeypot) {
+      setSent(true);
+      setForm({ name: "", phone: "", message: "" });
+      setHoneypot("");
+      setTimeout(() => setSent(false), 5000);
+      return;
+    }
+
+    // Cooldown: не чаще раза в минуту
+    const now = Date.now();
+    if (now - lastSubmit < COOLDOWN_MS) {
+      const waitSec = Math.ceil((COOLDOWN_MS - (now - lastSubmit)) / 1000);
+      setError(`Подождите ${waitSec} сек. перед следующей заявкой`);
+      return;
+    }
+
+    setIsSending(true);
+    setError(null);
+
+    try {
+      await sendToTelegram({
+        name: form.name,
+        phone: form.phone,
+        message: form.message,
+      });
+      setSent(true);
+      setForm({ name: "", phone: "", message: "" });
+      setLastSubmit(Date.now());
+      setTimeout(() => setSent(false), 5000);
+    } catch (err) {
+      console.error("[telegram] send error:", err);
+      setError(
+        "Не удалось отправить заявку. Позвоните нам по телефону +7 (800) 123-45-67 или попробуйте позже.",
+      );
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -65,11 +109,14 @@ export default function Contacts() {
               ))}
             </div>
 
-            <div className="map-placeholder">
-              <div className="map-placeholder-inner">
-                <Icon name="map-pin" size={40} />
-                <p>Саратов, ул. Первомайская, 26</p>
-              </div>
+            <div className="map-wrap">
+              <iframe
+                title="Карта — г. Саратов, ул. Первомайская, д. 26"
+                src="https://yandex.ru/map-widget/v1/?ll=46.042456%2C51.530796&z=16&pt=46.042456%2C51.530796%2Cpm2rdm"
+                allowFullScreen
+                frameBorder="0"
+                loading="lazy"
+              />
             </div>
           </div>
 
@@ -89,6 +136,18 @@ export default function Contacts() {
               </div>
             ) : (
               <form onSubmit={handleSubmit}>
+                {/* Honeypot — скрытое поле, боты его заполняют, люди нет */}
+                <div className="honeypot" aria-hidden="true">
+                  <label>Не заполняйте это поле</label>
+                  <input
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={honeypot}
+                    onChange={(e) => setHoneypot(e.target.value)}
+                  />
+                </div>
+
                 <div className="form-field">
                   <label className="label">Ваше имя</label>
                   <input
@@ -125,8 +184,22 @@ export default function Contacts() {
                     }
                   />
                 </div>
-                <button type="submit" className="form-submit">
-                  Отправить заявку
+
+                {error && <div className="form-error">{error}</div>}
+
+                <button
+                  type="submit"
+                  className="form-submit"
+                  disabled={isSending}
+                >
+                  {isSending ? (
+                    <>
+                      <span className="form-spinner" />
+                      Отправляем...
+                    </>
+                  ) : (
+                    "Отправить заявку"
+                  )}
                 </button>
                 <p className="form-disclaimer">
                   Нажимая кнопку, вы соглашаетесь с{" "}
