@@ -1,0 +1,95 @@
+.cookie-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  padding: 16px;
+  pointer-events: none;
+}
+@media (min-width: 640px) { .cookie-banner { padding: 24px; } }
+
+.cookie-banner-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  pointer-events: auto;
+}
+@media (min-width: 640px) { .cookie-banner-inner { flex-direction: row; align-items: center; } }
+
+.cookie-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius);
+  background: var(--green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 18px;
+}
+.cookie-text {
+  flex: 1;
+  min-width: 0;
+}
+.cookie-title {
+  color: #fff;
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+.cookie-desc {
+  color: rgba(255, 255, 255, 0.55);
+  font-family: var(--font-body);
+  font-size: 12px;
+  line-height: 1.55;
+}
+.cookie-desc a { color: rgba(255, 255, 255, 0.80); text-decoration: underline; }
+.cookie-desc a:hover { color: #fff; }
+
+.cookie-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  width: 100%;
+}
+@media (min-width: 640px) { .cookie-actions { width: auto; } }
+.cookie-decline {
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  color: rgba(255, 255, 255, 0.60);
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: none;
+  transition: all .2s ease;
+}
+.cookie-decline:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.30);
+}
+.cookie-accept {
+  flex: 1;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  background: var(--green);
+  color: #fff;
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 13px;
+  transition: filter .2s ease;
+}
+.cookie-accept:hover { filter: brightness(1.1); }
+@media (min-width: 640px) { .cookie-decline, .cookie-accept { flex: none; } }
