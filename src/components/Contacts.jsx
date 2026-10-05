@@ -5,24 +5,9 @@ import { formatPhoneInput, isValidPhone } from "../phoneFormatter";
 import "./Contacts.css";
 
 const CONTACTS = [
-  {
-    icon: "phone",
-    label: "Телефон",
-    value: "+7 (800) 123-45-67",
-    href: "tel:+78001234567",
-  },
-  {
-    icon: "mail",
-    label: "Электронная почта",
-    value: "info@ekoteplo.ru",
-    href: "mailto:info@ekoteplo.ru",
-  },
-  {
-    icon: "map-pin",
-    label: "Адрес",
-    value: "г. Саратов, ул. Первомайская, д. 26",
-    href: null,
-  },
+  { icon: "phone", label: "Телефон", value: "+7 (800) 123-45-67", href: "tel:+78001234567" },
+  { icon: "mail", label: "Электронная почта", value: "info@ekoteplo.ru", href: "mailto:info@ekoteplo.ru" },
+  { icon: "map-pin", label: "Адрес", value: "г. Саратов, ул. Первомайская, д. 26", href: null },
 ];
 
 const COOLDOWN_MS = 60 * 1000; // 60 секунд между заявками — защита от спама
@@ -58,9 +43,7 @@ export default function Contacts() {
 
     // Проверяем, что телефон полностью введён (11 цифр)
     if (!isValidPhone(form.phone)) {
-      setError(
-        "Введите номер телефона полностью — 11 цифр, например: +7 (935) 231 45 87",
-      );
+      setError("Введите номер телефона полностью — 11 цифр, например: +7 (935) 231 45 87");
       return;
     }
 
@@ -72,15 +55,17 @@ export default function Contacts() {
         name: form.name,
         phone: form.phone,
         message: form.message,
+        hp: honeypot, // передаём honeypot в Worker для двойной проверки
       });
       setSent(true);
       setForm({ name: "", phone: "", message: "" });
+      setHoneypot("");
       setLastSubmit(Date.now());
       setTimeout(() => setSent(false), 5000);
     } catch (err) {
       console.error("[telegram] send error:", err);
       setError(
-        "Не удалось отправить заявку. Позвоните нам по телефону +7 (800) 123-45-67 или попробуйте позже.",
+        "Не удалось отправить заявку. Позвоните нам по телефону +7 (800) 123-45-67 или попробуйте позже."
       );
     } finally {
       setIsSending(false);
@@ -107,9 +92,7 @@ export default function Contacts() {
                   <div>
                     <div className="contact-label">{label}</div>
                     {href ? (
-                      <a className="contact-value" href={href}>
-                        {value}
-                      </a>
+                      <a className="contact-value" href={href}>{value}</a>
                     ) : (
                       <span className="contact-value">{value}</span>
                     )}
@@ -139,9 +122,7 @@ export default function Contacts() {
               <div className="form-success">
                 <Icon name="check" size={56} className="form-success-icon" />
                 <h4 className="form-success-title">Заявка отправлена!</h4>
-                <p className="form-success-text">
-                  Мы свяжемся с вами в ближайшее время.
-                </p>
+                <p className="form-success-text">Мы свяжемся с вами в ближайшее время.</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit}>
@@ -176,12 +157,7 @@ export default function Contacts() {
                     required
                     placeholder="+7 (___) ___ __ __"
                     value={form.phone}
-                    onChange={(e) =>
-                      setForm({
-                        ...form,
-                        phone: formatPhoneInput(e.target.value),
-                      })
-                    }
+                    onChange={(e) => setForm({ ...form, phone: formatPhoneInput(e.target.value) })}
                     inputMode="tel"
                     autoComplete="tel"
                     maxLength={18} // "+7 (XXX) XXX XX XX" = 18 символов максимум
@@ -194,9 +170,7 @@ export default function Contacts() {
                     rows={4}
                     placeholder="Опишите ваш объект и задачу..."
                     value={form.message}
-                    onChange={(e) =>
-                      setForm({ ...form, message: e.target.value })
-                    }
+                    onChange={(e) => setForm({ ...form, message: e.target.value })}
                   />
                 </div>
 

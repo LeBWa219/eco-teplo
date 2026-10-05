@@ -1,84 +1,66 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// Интеграция с Telegram-ботом для формы обратной связи
+// Интеграция с Telegram через Cloudflare Worker (прокси)
 // ═══════════════════════════════════════════════════════════════════════════
 //
-// ⚠️  ВАЖНО ПРО БЕЗОПАСНОСТЬ
-// Это статичный сайт (GitHub Pages), без backend. BOT_TOKEN будет виден в
-// собранном JS-бандле. Любой посетитель технически может его извлечь.
-// Реальный риск: кто-то может слать спам в ваш чат через этого бота.
-// Это НЕ даёт доступ к вашему аккаунту или к чтению ваших сообщений.
+// Почему Worker, а не напрямую api.telegram.org?
+//   1. api.telegram.org периодически блокируется/троттлится провайдерами РФ
+//      → заявки не доходят с браузера посетителя
+//   2. Cloudflare Worker'ы не блокируются в РФ → всегда доступны
+//   3. Worker делает запрос к Telegram со своей сети (вне РФ) → обход блокировки
+//   4. BOT_TOKEN хранится как secret-переменная Cloudflare → его НЕТ в коде
+//      сайта, никто не может его извлечь из собранного бандла
 //
-// Если нужна полноценная защита — перенесите отправку на Cloudflare Workers
-// или Vercel Functions (token хранится как env-переменная сервера).
+// Как настроить (один раз):
+//   1. Зарегистрируйтесь на https://dash.cloudflare.com (бесплатно)
+//   2. Workers & Pages → Create Worker → назовите "ekoteplo-telegram" → Deploy
+//   3. Edit code → вставьте содержимое worker/telegram-proxy.js → Deploy
+//   4. Settings → Variables and Secrets → Add:
+//        BOT_TOKEN = <ваш токен от @BotFather>   (Mark as Secret)
+//        CHAT_ID   = <ваш chat_id от @userinfobot>
+//   5. Скопируйте URL Worker'а: https://ekoteplo-telegram.<your-subdomain>.workers.dev
+//   6. Вставьте URL ниже в workerUrl
 // ═══════════════════════════════════════════════════════════════════════════
 
 // ─── НАСТРОЙКА ─────────────────────────────────────────────────────────────
-// 1. Получите BOT_TOKEN у @BotFather в Telegram (команда /newbot)
-// 2. Узнайте свой chat_id у @userinfobot (или @getmyid_bot)
-// 3. Отправьте боту любое сообщение (иначе он не сможет вам написать первым)
-// 4. Вставьте значения ниже
+// Вставьте URL вашего Cloudflare Worker'а (см. инструкцию выше).
+// Пока стоит PLACEHOLDER — форма будет показывать понятную ошибку.
 export const TELEGRAM_CONFIG = {
-  botToken: "8902236587:AAGvTRJzzYf9ml19Iy_N2WHZDrATrXpVTEc",
-  chatId: "597023363",
+  workerUrl: "https://ekoteplo-telegram.idbratchikov-019.workers.dev", // пример: https://ekoteplo-telegram.abc123.workers.dev
 };
 
 // ─── ОТПРАВКА СООБЩЕНИЯ ─────────────────────────────────────────────────────
-// Формирует красиво оформленное сообщение и шлёт его в Telegram
+// Отправляет данные формы в Cloudflare Worker, который уже сам шлёт их в Telegram.
 export async function sendToTelegram({
   name,
   phone,
   message,
+  hp = "",
   source = "Сайт ЭкоТепло",
 }) {
-  const { botToken, chatId } = TELEGRAM_CONFIG;
+  const { workerUrl } = TELEGRAM_CONFIG;
 
-  if (!botToken || !chatId || botToken.includes("PASTE_YOUR")) {
+  if (!workerUrl || workerUrl.includes("PASTE_YOUR")) {
     throw new Error(
-      "Telegram-бот не настроен: заполните TELEGRAM_CONFIG в src/telegram.js",
+      "Cloudflare Worker не настроен: заполните workerUrl в src/telegram.js",
     );
   }
 
-  // Экранируем HTML-спецсимволы в пользовательском вводе, чтобы не сломать разметку
-  const esc = (s = "") =>
-    s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
-  const time = new Date().toLocaleString("ru-RU", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-
-  const text = [
-    `🔔 <b>Новая заявка с сайта</b>`,
-    `<b>Источник:</b> ${esc(source)}`,
-    ``,
-    `<b>👤 Имя:</b> ${esc(name)}`,
-    `<b>📞 Телефон:</b> ${esc(phone)}`,
-    message ? `<b>💬 Сообщение:</b>\n${esc(message)}` : null,
-    ``,
-    `<i>🕒 Время: ${time}</i>`,
-  ]
-    .filter(Boolean)
-    .join("\n");
-
-  const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-
-  const res = await fetch(url, {
+  const res = await fetch(workerUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      chat_id: chatId,
-      text,
-      parse_mode: "HTML",
-      disable_web_page_preview: true,
-    }),
+    body: JSON.stringify({ name, phone, message, hp, source }),
   });
 
-  const data = await res.json();
-  if (!data.ok) {
-    throw new Error(data.description || "Неизвестная ошибка Telegram API");
+  let data;
+  try {
+    data = await res.json();
+  } catch {
+    throw new Error(`Сервер вернул неожиданный ответ (HTTP ${res.status})`);
   }
+
+  if (!data.ok) {
+    throw new Error(data.error || `Ошибка Worker'а (HTTP ${res.status})`);
+  }
+
   return data;
 }
