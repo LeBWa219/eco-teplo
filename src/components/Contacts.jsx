@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Icon } from "../icons";
 import { sendToTelegram } from "../telegram";
+import { formatPhoneInput, isValidPhone } from "../phoneFormatter";
 import "./Contacts.css";
 
 const CONTACTS = [
@@ -52,6 +53,14 @@ export default function Contacts() {
     if (now - lastSubmit < COOLDOWN_MS) {
       const waitSec = Math.ceil((COOLDOWN_MS - (now - lastSubmit)) / 1000);
       setError(`Подождите ${waitSec} сек. перед следующей заявкой`);
+      return;
+    }
+
+    // Проверяем, что телефон полностью введён (11 цифр)
+    if (!isValidPhone(form.phone)) {
+      setError(
+        "Введите номер телефона полностью — 11 цифр, например: +7 (935) 231 45 87",
+      );
       return;
     }
 
@@ -165,11 +174,17 @@ export default function Contacts() {
                     className="input"
                     type="tel"
                     required
-                    placeholder="+7 (___) ___-__-__"
+                    placeholder="+7 (___) ___ __ __"
                     value={form.phone}
                     onChange={(e) =>
-                      setForm({ ...form, phone: e.target.value })
+                      setForm({
+                        ...form,
+                        phone: formatPhoneInput(e.target.value),
+                      })
                     }
+                    inputMode="tel"
+                    autoComplete="tel"
+                    maxLength={18} // "+7 (XXX) XXX XX XX" = 18 символов максимум
                   />
                 </div>
                 <div className="form-field">
