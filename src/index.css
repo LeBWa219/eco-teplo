@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   БиоГорелка — design system
+   ЭкоТепло — design system
    Palette: GREEN #1E5631, ORANGE #F57C00, light theme
    Fonts: Montserrat (headings), PT Sans (body)
 ═══════════════════════════════════════════════════════════════════════════ */
@@ -56,6 +56,23 @@ body {
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden; /* защита от случайного горизонтального скролла */
+  overflow-wrap: break-word; /* длинные кириллические слова переносятся */
+  word-break: break-word;
+}
+
+/* Чтобы любые заголовки тоже переносили длинные слова */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+a,
+li {
+  overflow-wrap: break-word;
 }
 
 a {
@@ -108,6 +125,42 @@ section {
 @media (max-width: 720px) {
   section {
     padding: 56px 0;
+  }
+}
+@media (max-width: 380px) {
+  section {
+    padding: 44px 0;
+  }
+}
+
+/* Уменьшаем хедер-заголовки секций на мобильных для компактности */
+@media (max-width: 720px) {
+  .section-head {
+    margin-bottom: 40px;
+  }
+  .section-head h2 {
+    font-size: clamp(24px, 6vw, 32px);
+  }
+  .section-head p {
+    font-size: 15px;
+  }
+}
+@media (max-width: 380px) {
+  .section-head {
+    margin-bottom: 32px;
+  }
+}
+
+/* Кнопки на мобильных — побольше площадь нажатия */
+@media (max-width: 720px) {
+  .btn {
+    padding: 14px 22px;
+    font-size: 14px;
+  }
+  .btn-lg {
+    padding: 15px 24px;
+    font-size: 15px;
+    width: 100%;
   }
 }
 
