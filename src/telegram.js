@@ -18,8 +18,8 @@
 // 3. Отправьте боту любое сообщение (иначе он не сможет вам написать первым)
 // 4. Вставьте значения ниже
 export const TELEGRAM_CONFIG = {
-  botToken: "PASTE_YOUR_BOT_TOKEN_HERE",
-  chatId: "PASTE_YOUR_CHAT_ID_HERE",
+  botToken: "8902236587:AAGvTRJzzYf9ml19Iy_N2WHZDrATrXpVTEc",
+  chatId: "597023363",
 };
 
 // ─── ОТПРАВКА СООБЩЕНИЯ ─────────────────────────────────────────────────────
