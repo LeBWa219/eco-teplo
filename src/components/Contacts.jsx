@@ -123,7 +123,7 @@ export default function Contacts() {
             <div className="map-wrap">
               <iframe
                 title="Карта — г. Саратов, ул. Первомайская, д. 26"
-                src="https://yandex.ru/maps/?um=constructor%3A93d9a9eaa4579d5db0812d13211498022a14c327bec51cd3945432ffd741e497&source=constructorLink"
+                src="https://yandex.ru/map-widget/v1/?ll=46.047965%2C51.529741&z=17&pt=46.047965%2C51.529741%2Cpm2rdm"
                 allowFullScreen
                 frameBorder="0"
                 loading="lazy"
