@@ -144,7 +144,6 @@
   cursor: not-allowed;
 }
 
-/* Honeypot — скрытое поле-ловушка для ботов. Невидимо для людей. */
 .honeypot {
   position: absolute;
   left: -9999px;
@@ -156,7 +155,6 @@
   pointer-events: none;
 }
 
-/* Спиннер во время отправки */
 .form-spinner {
   width: 16px;
   height: 16px;
@@ -171,7 +169,6 @@
   }
 }
 
-/* Сообщение об ошибке отправки */
 .form-error {
   margin-bottom: 16px;
   padding: 12px 16px;

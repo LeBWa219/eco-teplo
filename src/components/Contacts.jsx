@@ -25,11 +25,11 @@ const CONTACTS = [
   },
 ];
 
-const COOLDOWN_MS = 60 * 1000; // 60 секунд между заявками — защита от спама
+const COOLDOWN_MS = 60 * 1000;
 
 export default function Contacts() {
   const [form, setForm] = useState({ name: "", phone: "", message: "" });
-  const [honeypot, setHoneypot] = useState(""); // ловушка для ботов (люди это поле не видят)
+  const [honeypot, setHoneypot] = useState("");
   const [sent, setSent] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState(null);
@@ -39,7 +39,6 @@ export default function Contacts() {
     e.preventDefault();
     if (isSending) return;
 
-    // Honeypot: если поле заполнено — это бот, молча имитируем успех
     if (honeypot) {
       setSent(true);
       setForm({ name: "", phone: "", message: "" });
@@ -48,7 +47,6 @@ export default function Contacts() {
       return;
     }
 
-    // Cooldown: не чаще раза в минуту
     const now = Date.now();
     if (now - lastSubmit < COOLDOWN_MS) {
       const waitSec = Math.ceil((COOLDOWN_MS - (now - lastSubmit)) / 1000);
@@ -56,7 +54,6 @@ export default function Contacts() {
       return;
     }
 
-    // Проверяем, что телефон полностью введён (11 цифр)
     if (!isValidPhone(form.phone)) {
       setError(
         "Введите номер телефона полностью — 11 цифр, например: +7 (935) 231 45 87",
@@ -72,7 +69,7 @@ export default function Contacts() {
         name: form.name,
         phone: form.phone,
         message: form.message,
-        hp: honeypot, // передаём honeypot в Worker для двойной проверки
+        hp: honeypot,
       });
       setSent(true);
       setForm({ name: "", phone: "", message: "" });
@@ -147,7 +144,6 @@ export default function Contacts() {
               </div>
             ) : (
               <form onSubmit={handleSubmit}>
-                {/* Honeypot — скрытое поле, боты его заполняют, люди нет */}
                 <div className="honeypot" aria-hidden="true">
                   <label>Не заполняйте это поле</label>
                   <input
@@ -186,7 +182,7 @@ export default function Contacts() {
                     }
                     inputMode="tel"
                     autoComplete="tel"
-                    maxLength={18} // "+7 (XXX) XXX XX XX" = 18 символов максимум
+                    maxLength={18}
                   />
                 </div>
                 <div className="form-field">

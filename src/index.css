@@ -1,9 +1,3 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   ЭкоТепло — design system
-   Palette: GREEN #1E5631, ORANGE #F57C00, light theme
-   Fonts: Montserrat (headings), PT Sans (body)
-═══════════════════════════════════════════════════════════════════════════ */
-
 :root {
   --green: #1e5631;
   --green-soft: #2a6b3f;
@@ -56,12 +50,11 @@ body {
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden; /* защита от случайного горизонтального скролла */
-  overflow-wrap: break-word; /* длинные кириллические слова переносятся */
+  overflow-x: hidden;
+  overflow-wrap: break-word;
   word-break: break-word;
 }
 
-/* Чтобы любые заголовки тоже переносили длинные слова */
 h1,
 h2,
 h3,
@@ -133,7 +126,6 @@ section {
   }
 }
 
-/* Уменьшаем хедер-заголовки секций на мобильных для компактности */
 @media (max-width: 720px) {
   .section-head {
     margin-bottom: 40px;
@@ -151,7 +143,6 @@ section {
   }
 }
 
-/* Кнопки на мобильных — побольше площадь нажатия */
 @media (max-width: 720px) {
   .btn {
     padding: 14px 22px;
@@ -163,8 +154,6 @@ section {
     width: 100%;
   }
 }
-
-/* ─── Primitives ─────────────────────────────────────────────────────────── */
 
 .eyebrow {
   display: inline-block;
@@ -263,8 +252,6 @@ section {
   font-size: 13px;
 }
 
-/* ─── Reusable card ──────────────────────────────────────────────────────── */
-
 .card {
   background: #fff;
   border: 1.5px solid var(--line-soft);
@@ -300,8 +287,6 @@ section {
   height: 56px;
   border-radius: var(--radius-md);
 }
-
-/* ─── Form controls ─────────────────────────────────────────────────────── */
 
 .input,
 .textarea {

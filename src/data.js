@@ -1,16 +1,9 @@
-// ═══════════════════════════════════════════════════════════════════════════
-// Контент сайта БиоГорелка — все данные в одном месте
-// Все изображения локальные, в /images/
-// ═══════════════════════════════════════════════════════════════════════════
-
 export const GREEN = "#1E5631";
 export const ORANGE = "#F57C00";
 
-// Префикс для статичных ассетов — работает на любом base (GH Pages, локал, корневой домен)
 const BASE = import.meta.env.BASE_URL; // Vite подставляет '/eco-teplo/' при сборке
 export const img = (file) => `${BASE}images/${file}`;
 
-// Навигация
 export const NAV_LINKS = [
   { label: "Главная", href: "#hero" },
   { label: "Продукция", href: "#products" },
@@ -20,7 +13,6 @@ export const NAV_LINKS = [
   { label: "Контакты", href: "#contacts" },
 ];
 
-// 6 причин перейти на альтернативно-возобновляемое топливо
 export const ADVANTAGES = [
   {
     title: "Экономия в 3–5 раз",
@@ -54,7 +46,6 @@ export const ADVANTAGES = [
   },
 ];
 
-// Виды топлива (локальные изображения)
 export const FUELS = [
   {
     name: "Шелуха подсолнечника",
@@ -83,7 +74,6 @@ export const FUELS = [
   },
 ];
 
-// Продукция — 2 продукта с расширенной информацией в модалке
 export const PRODUCTS = [
   {
     id: "burner",
@@ -186,7 +176,6 @@ export const PRODUCTS = [
   },
 ];
 
-// Области применения (локальные изображения)
 export const APPLICATIONS = [
   {
     name: "Теплицы",
@@ -230,7 +219,6 @@ export const APPLICATIONS = [
   },
 ];
 
-// Услуги (заменяет блок "Как мы работаем")
 export const SERVICES = [
   {
     num: "01",
@@ -252,7 +240,6 @@ export const SERVICES = [
   },
 ];
 
-// FAQ
 export const FAQ_ITEMS = [
   {
     question: "Какие виды топлива подходят для ваших горелок и котлов?",
@@ -288,7 +275,6 @@ export const FAQ_ITEMS = [
   },
 ];
 
-// Отзывы (локальные изображения для аватаров и медиа)
 export const TESTIMONIALS = [
   {
     id: 1,
@@ -365,8 +351,6 @@ export const TESTIMONIALS = [
   // },
 ];
 
-// Hero — фоновое изображение
 export const HERO_IMAGE = img("hero-bg.jpg");
 
-// About — изображение
 export const ABOUT_IMAGE = img("about-image.jpg");

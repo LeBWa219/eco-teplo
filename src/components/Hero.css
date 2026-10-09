@@ -98,7 +98,6 @@
   margin-top: 4px;
 }
 
-/* На маленьких экранах: статы в 2 колонки, чтобы не вылезали за край */
 @media (max-width: 480px) {
   .hero-stats {
     display: grid;
@@ -112,7 +111,6 @@
   .hero-stat-label {
     font-size: 13px;
   }
-  /* Стат "50–700 кВт" слишком длинный — растягиваем на 2 колонки */
   .hero-stats > div:nth-child(2) {
     grid-column: 1 / -1;
   }
